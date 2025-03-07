@@ -251,6 +251,8 @@ The dashboard is structured as follows:
 
 5.  **Bottom Section: Year-Over-Year Comparison Matrix**
     * A matrix table presents a detailed comparison of each KPI between the selected year and the previous year.
+
+ ![Image](https://github.com/user-attachments/assets/58d7b7fa-f7b4-43ee-8124-60bca53d47ac)
       
 ## Key Measures
 **KPI Table**
@@ -358,7 +360,7 @@ Month Number = MONTH('Table_date'[Date])
 ```dax
 Year = year(Table_date[Date])
 ```
-
+ 
  
 ## III) Keys Insights of the analysis 
 With the first part of the analysis( Python) we observed that: 
@@ -400,23 +402,7 @@ Lowest: Recorded in the South
      - Jupyter Notebooks (if applicable).
      - The Dashboard.
      - Data files (if possible) or steps to access them.
-## How to Use
-
-1.  Download the `Sales-Dashboard-2023.pbix` file.
-2.  Open the file using Power BI Desktop.
-3.  Explore the visualizations and interact with the slicers.
-
-## Contributing
-
-Contributions are welcome!
-
-## License
-
-This project is licensed under the MIT License.
-
-## Requirements
-
-
+  ## Requirements
 - **Python Programming Language**: python editors
 
 - **Kaggle API Key** (for data downloading)
@@ -425,6 +411,9 @@ This project is licensed under the MIT License.
 
    ```
 1. Set up your Kaggle API, download the data, and follow the steps to load and analyze.
+2.  Download the `Superstore_analysis_dashboard.pbix` file.
+3.  Open the file using Power BI Desktop.
+4.  Explore the visualizations and interact with the slicers.
 
 ---
 
@@ -435,11 +424,19 @@ This project is licensed under the MIT License.
 |-- Python_script/              # Python scripts for analysis and queries
 |-- README.md                 # Project documentation
 |-- main.py                   # Main script for loading, cleaning, and processing data
+|-- Dashboard.pbix             # Dashbord for data visualisatuin 
 ```
+
+## Contributing
+
+Contributions are welcome!
+
+## License
+
+This project is licensed under the MIT License.
 
 ## Acknowledgments
 
 - **Data Source**: Kaggle’s superstore  Sales Dataset
 - **Inspiration**: Walmart’s business case studies on sales and supply chain optimization.
 
----
