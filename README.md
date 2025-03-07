@@ -84,7 +84,7 @@ summary_stats = df[['Sales', 'Profit', 'Discount', 'Profit Margin']].describe()
 summary_stats 
 ```
 ### b) Profit margin
-#### * Accross regions
+#### * Across regions
 ```python
  Analyze the profit margin by regions 
 # ANOVA Test:
@@ -110,7 +110,7 @@ plt.xlabel('Region')
 plt.ylabel('Profit margin')
 plt.show()
 ```
-#### * Accross differents categories
+#### * Across differents categories
 ```python
 #2) analyze profit margin across Category 
 anova_result2 = stats.f_oneway(df[df["Category"] == "Furniture"]['Profit Margin'],
@@ -134,7 +134,7 @@ plt.xlabel('Category')
 plt.ylabel('Profit margin')
 plt.show()
 ```
- #### * Accross differents segments
+ #### * Across differents segments
  ```python
  #2)  profit margin across segment 
 anova_result3 = stats.f_oneway(df[df["Segment"] == "Consumer"]['Profit Margin'],
@@ -158,7 +158,7 @@ plt.xlabel('segment')
 plt.ylabel('Profit margin')
 plt.show()
 ```
-#### * Accross subcategory
+#### * Across subcategory
 ```python
 # Boxplot for profit margin by subcategory
 plt.figure(figsize=(8, 6))
@@ -170,7 +170,7 @@ plt.ylabel('Profit Margin (%)')
 plt.tight_layout()  
 plt.show()
 ```
-#### c) Products category accross regions
+#### c) Products category across regions
 ```python
 # Cross-tabulation: Category vs. Region
 category_region = pd.crosstab(df['Category'], df['Region'])
@@ -184,7 +184,7 @@ plt.ylabel('Count')
 plt.xticks(rotation=45)
 plt.show()
 ```
-#### d) Products sub-category accross regions
+#### d) Products sub-category across regions
 ```python
 # Heatmap: Sub-Category vs. Region
 plt.figure(figsize=(10, 6))
