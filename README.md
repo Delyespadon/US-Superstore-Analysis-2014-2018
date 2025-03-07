@@ -223,21 +223,167 @@ Sales Performance Report: Monthly Sales Analysis
 This report evaluates sales performance using a Power BI dashboard designed to track key performance indicators (KPIs) such as sales, profit margins, and regional performance. The dashboard includes visualizations that illustrate sales trends, category performance, and profitability across regions, helping identify areas for improvement and strategic growth.
 
 ### 2. Dashboard Overview:
-The dashboard features five primary KPIs: number of customers, number of orders, number of items sold, total sales, and profit. Filters for region, category, month, and year enable a focused monthly analysis. Visual elements include:
+The dashboard features four primary KPIs: number of customers, number of items sold(quantity), total sales, and profit. Filters for year enable a focused yearly KPI analysis in each region accross the country. Visual elements include:
 
-Column bar charts: Sales by region, sales by category, profit by region, profit by category, and sales by segment.
+Column bar chart: This describe the yearly overview of each KPI accross each  regions of the country.
 
-Line chart: Daily sales trend.
+Stack bar chart:  This describe the yearly overview of each KPI accross each  states of the country
 
-Scatter chart: Profit vs. sales comparison by segment.
+Matrix Table: it give an overall of eaah yearly Kpi compared to the previous year
+## Dashboard Layout
 
+The dashboard is structured as follows:
+
+1.  **Top Section: KPI Selection and Year Slicers**
+    * The dashboard begins with four prominent KPI cards, dynamically displaying values based on user selection.
+    * Four distinct year title slicers allow users to select specific years for analysis.
+
+2.  **Left Section: Regional Analysis**
+    * Four column charts, one for each region, display the selected KPI's performance within that region.
+    * A dynamic card visual displays the overall value of the selected KPI.
+
+3.  **Middle Right Section: Geographical Analysis**
+    * A map chart visualizes the selected KPI's distribution across different parts of the USA.
+    * An adjacent bar chart breaks down the selected KPI's performance by state within each country.
+
+4.  **Extreme Middle Right Section: State Analysis**
+    * A bar chart representing each Kpi in each country's states.
+
+5.  **Bottom Section: Year-Over-Year Comparison Matrix**
+    * A matrix table presents a detailed comparison of each KPI between the selected year and the previous year.
+      
+## Key Measures
+**KPI Table**
+```dax
+KPI = 
+{
+    ("Customers", NAMEOF('Superstore'[Total Customer]), 0),
+    ("Profit", NAMEOF('Superstore'[Total Profit]), 1),
+    ("Sales", NAMEOF('Superstore'[Total sales]), 2),
+    ("Quantity", NAMEOF('Superstore'[Total Quantity]), 3)
+}
+```
+ **Previous Year Customers (PY Customers):** Calculates and displays the  total customers from the previous year, formatted in thousands.
+This measure retrieves the year selected by the user, calculates the total customer for the previous year, and formats it to display in thousands. If no data is available for the previous year, it displays " No Data"
+    ```dax
+PY Customers = 
+VAR SelectedYear = SELECTEDVALUE(Table_date[Year])
+VAR PreviousYearCustomers = CALCULATE([Total Customer], Table_date[Year] = SelectedYear - 1)
+VAR FormatPYcustomers = FORMAT(PreviousYearCustomers/1000, "0.00")
+RETURN
+    IF(
+        ISBLANK(PreviousYearCustomers),
+        " No Data",
+        FormatPYcustomers & "K"
+    )
+  ```
+
+ **Previous Year Profit (PY Profit):** Calculates and displays the profit from the previous year, formatted in thousands.
+    ```dax
+    PY profit =
+    VAR SelectedYear = SELECTEDVALUE(Table_date[Year])
+    VAR PreviousYearProfit = CALCULATE([Total Profit], Table_date[Year] = SelectedYear - 1)
+    VAR FormatPYProfit = FORMAT(PreviousYearProfit/1000, "0.00")
+    RETURN
+    IF(
+        ISBLANK(PreviousYearProfit),
+        " No Data",
+        FormatPYProfit & "K"
+    )
+This measure retrieves the year selected by the user, calculates the total profit for the previous year, and formats it to display in thousands. If no data is available for the previous year, it displays " No Data"
+    ```
+* **Previous Year Quantity (PY Quantity):** Calculates and displays the quantity from the previous year, formatted in thousands. 
+    This measure retrieves the year selected by the user, calculates the total quantity for the previous year, and formats it to display in thousands. If no data is available for the previous year, it displays " No Data".
+
+    ```dax
+    PY Quantity =
+    VAR SelectedYear = SELECTEDVALUE(Table_date[Year])
+    VAR PreviousYearQuantity = CALCULATE([Total Quantity], Table_date[Year] = SelectedYear - 1)
+    VAR FormatPYQuantity = FORMAT(PreviousYearQuantity/1000, "0.00")
+    RETURN
+    IF(
+        ISBLANK(PreviousYearQuantity),
+        " No Data",
+        FormatPYQuantity & "K"
+    )
+    ```
+   **Previous year Sales (PY Sales) :** Calculates and displays the Sales from the previous year, formatted in thousands
+
+```dax
+PY Sales = 
+VAR SelectedYear = SELECTEDVALUE(Table_date[Year])
+VAR PreviousYearSales = CALCULATE([Total Sales], Table_date[Year] = SelectedYear - 1)
+VAR FormatPYsales = FORMAT(PreviousYearSales/1000, "0.00")
+RETURN
+    IF(
+        ISBLANK(PreviousYearSales),
+        " No Data",
+        FormatPYsales & "K"
+    )
+``` 
+**CY Customer**
+
+```dax
+CY Customer = 
+VAR SelectedYear = SELECTEDVALUE(Table_date[Year])
+VAR CurrentYearCustomer = CALCULATE([Total Customer], Table_date[Year] = SelectedYear)
+VAR FormatCYCustomer = FORMAT(CurrentYearCustomer/1000, "0.00")
+RETURN
+    FormatCYCustomer & "K"
+```
+Similar Current Year Measures (CY Sales, CY Quantity, CY Profit)
+
+The DAX formulas for CY Sales, CY Quantity, and CY Profit follow the same pattern as CY Customer, with the variable names and calculated measures adjusted accordingly.
+
+Note: The formulas are very similar. Replace CurrentYearCustomer with CurrentYearSales, CurrentYearQuantity, and CurrentYearProfit respectively. Replace Total Customer with Total Sales, Total Quantity, and Total Profit respectively
+
+we created a calendar table name table_end  to filter our KPi on a yearly basis. it contain key colums such as: 
+**Table_date (Calendar Table)**
+
+```dax
+Table_date = calendar(min(Superstore[order Date]), max(Superstore[order Date]))
+```
+**Month (Calculated Column)**
+
+```dax
+Month = format(Table_date[Date],"MMM")
+```
+**Month Number (Calculated Column)**
+
+```dax
+Month Number = MONTH('Table_date'[Date])
+```
+**Year (Calculated Column)**
+
+```dax
+Year = year(Table_date[Date])
+```
+
+ 
 ## III) Keys Insights of the analysis 
+With the first part of the analysis( Python) we observed that: 
 - The **West** region generates the highest sales, but the **East** region has the highest profitability.
 - **Technology** is the most profitable category, while **Office Supplies** has the highest sales volume.
 - There is a negative correlation between **Discount** and **Profit**, suggesting excessive discounting reduces profitability.
 - ANOVA results indicate significant differences in profit and sales across regions and categories.
 - Chi-square results show a significant relationship between region and category sales.
 - The Regression  model shows that increasing sales boosts profit, while offering discounts reduces profit. However, the model’s explanatory power is limited, and addressing multicollinearity or including additional predictors could improve its accuracy.
+
+With powerBI we observed that in 2017 : 
+Total Sales (USD):
+Highest: $250.91K in the West region 
+Lowest: $122.91K  in the south region
+
+Number of Customers:
+Highest: 397 customers in the West
+Lowest: 223 customers in the East
+
+Profit (USD):
+Highest: $43.81K in the West
+Lowest: $7.5K in the Central
+Quantity Sold:
+Highest: Recorded in the West
+Lowest: Recorded in the South 
 
   ###  IV) Recommendations
 1. Reduce discounts, especially in regions where profits are negatively impacted.
@@ -247,17 +393,26 @@ Scatter chart: Profit vs. sales comparison by segment.
 5. Optimize inventory levels in high-performing regions to meet demand without overstocking
 6. Focus on boosting sales and optimizing discount strategies to maximize profit.
 
- **Documentation**: Keep clear notes of each query's objective, approach, and results.
-
 ### 8. Project Publishing and Documentation
-   - **Documentation**: Maintain well-structu
-   - red documentation of the entire process in Markdown or a mySQL file
+   - **Documentation**: Maintain well-structured documentation of the entire process in Markdown 
    - **Project Publishing**: Publish the completed project on GitHub or any other version control platform, including:
      - The `README.md` file (this document).
      - Jupyter Notebooks (if applicable).
-     - SQL query scripts.
+     - The Dashboard.
      - Data files (if possible) or steps to access them.
+## How to Use
 
+1.  Download the `Sales-Dashboard-2023.pbix` file.
+2.  Open the file using Power BI Desktop.
+3.  Explore the visualizations and interact with the slicers.
+
+## Contributing
+
+Contributions are welcome!
+
+## License
+
+This project is licensed under the MIT License.
 
 ## Requirements
 
@@ -277,7 +432,7 @@ Scatter chart: Profit vs. sales comparison by segment.
 
 ```plaintext
 |-- data/                     # Raw data and transformed data
-|-- Python_script/              # SQL scripts for analysis and queries
+|-- Python_script/              # Python scripts for analysis and queries
 |-- README.md                 # Project documentation
 |-- main.py                   # Main script for loading, cleaning, and processing data
 ```
